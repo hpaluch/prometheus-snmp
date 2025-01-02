@@ -26,3 +26,9 @@ them before running.
    ./bb-setup-snmp-tools.sh
    ```
 
+3. Now you should run script that will test that used MIBs really produce data with:
+
+   ```shell
+   ./test-mibs.sh
+   ```
+   
