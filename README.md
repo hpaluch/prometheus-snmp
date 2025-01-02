@@ -1,0 +1,28 @@
+# Monitoring SNMP targets with Prometheus
+
+> [!WARNING]
+> Work in Progress...
+
+Required OS: Debian 12 (I use it).
+
+# Setup
+
+> [!WARNING]
+> Currently there are too wide rights specified under `/etc/snmp/snmpd.conf.d/local.conf`.
+> It should be reduced to necessary tree only before going to production!
+
+NOTE: 2 Scripts below will modify several important files under `/etc/` - please review
+them before running.
+
+1. Install SNMP Daemon (server) and enable access to MIBs:
+
+   ```shell
+   ./aa-setup-snmpd.sh
+   ```
+
+2. Install SNMP Client tools so we can test MIBs that we plan to monitor with:
+
+   ```shell
+   ./bb-setup-snmp-tools.sh
+   ```
+
