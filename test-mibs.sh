@@ -10,10 +10,12 @@ function verbose_cmd
 {
 	echo >&2
 	echo "\$ $@"  >&2
+	echo >&2
 	"$@"
 }
 
 # test scalar MIBs
+echo "* Testing scalar MIB(s)..."
 for mib in DISMAN-EVENT-MIB::sysUpTimeInstance
 do
 	verbose_cmd snmpwalk -Os $cmd_common $mib | tee $tmp
@@ -28,14 +30,16 @@ do
 done
 
 # test tables - Disks (dskTable), Load Averages (laTable), Network interfaces (ifTable):
+echo
+echo  "* Testing table MIB(s)..."
 for mib in UCD-SNMP-MIB::ucdavis.dskTable UCD-SNMP-MIB::ucdavis.laTable IF-MIB::ifTable
 do
 	verbose_cmd snmptable -Cb $cmd_common $mib | tee $tmp
 	# 'wc -l' prints: COUNTER FILENAME
 	lines=$(wc -l $tmp | awk '{print $1}')
 	min_lines=4
-	[ "$lines" -ge $exp_lines ] || {
-		echo "ERROR: Got $lines lines for MIB $mib, but expected at least $exp_lines" >&2
+	[ "$lines" -ge $min_lines ] || {
+		echo "ERROR: Got $lines lines for MIB $mib, but expected at least $min_lines" >&2
 		exit 1
 	}
 	echo "OK (minimum lines $min_lines, got lines $lines)"
