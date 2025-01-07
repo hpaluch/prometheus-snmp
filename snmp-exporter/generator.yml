@@ -3,7 +3,7 @@
 modules:
   # Default IF-MIB interfaces table with ifIndex for UCD SNMP (Unix)
   if_mib:
-    walk: [sysUpTime, interfaces, ifXTable, dskTable, laTable, hrDeviceTable, hrProcessorTable, ucdavis]
+    walk: [sysUpTime,sysDescr, sysName, interfaces, ifXTable, dskTable, laTable, hrDeviceTable, hrProcessorTable, ucdavis]
     lookups:
       - source_indexes: [ifIndex]
         lookup: ifAlias
