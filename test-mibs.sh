@@ -34,7 +34,8 @@ done
 echo
 echo  "* Testing table MIB(s)..."
 # these tables are supported by UCD SNMP only (Unix)
-declare -a ucd_tables=(UCD-SNMP-MIB::ucdavis.dskTable UCD-SNMP-MIB::ucdavis.laTable IF-MIB::ifTable)
+declare -a ucd_tables=(UCD-SNMP-MIB::ucdavis.dskTable UCD-SNMP-MIB::ucdavis.laTable IF-MIB::ifTable
+	UCD-SNMP-MIB::ucdavis.prTable)
 # hrTables are supported by both UCD SNMP and Windows
 declare -a hr_tables=(HOST-RESOURCES-MIB::hrStorageTable HOST-RESOURCES-MIB::hrDeviceTable
 	HOST-RESOURCES-MIB::hrProcessorTable HOST-RESOURCES-MIB::hrNetworkTable HOST-RESOURCES-MIB::hrFSTable)
