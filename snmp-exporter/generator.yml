@@ -1,0 +1,79 @@
+# generator.yml - MIB generator for Prometheus SNMP Exporter
+# to generate snmp.yml and reload it simply run ./reload-snmp-exporter.sh
+modules:
+  # Default IF-MIB interfaces table with ifIndex for UCD SNMP (Unix)
+  if_mib:
+    walk: [sysUpTime, interfaces, ifXTable, dskTable, laTable, hrDeviceTable, hrProcessorTable, ucdavis]
+    lookups:
+      - source_indexes: [ifIndex]
+        lookup: ifAlias
+      - source_indexes: [ifIndex]
+        # Uis OID to avoid conflict with PaloAlto PAN-COMMON-MIB.
+        lookup: 1.3.6.1.2.1.2.2.1.2 # ifDescr
+      - source_indexes: [ifIndex]
+        # Use OID to avoid conflict with Netscaler NS-ROOT-MIB.
+        lookup: 1.3.6.1.2.1.31.1.1.1.1 # ifName
+      - source_indexes: [dskIndex]
+        lookup: dskDevice
+      - source_indexes: [dskIndex]
+        lookup: dskPath
+      - source_indexes: [dskIndex]
+        lookup: dskErrorMsg
+      - source_indexes: [laIndex]
+        lookup: laNames
+      - source_indexes: [laIndex]
+        lookup: laErrMessage
+      - source_indexes: [laIndex]
+        lookup: laConfig
+      - source_indexes: [hrDeviceIndex]
+        lookup: hrDeviceDescr
+      - source_indexes: [hrDeviceIndex]
+        lookup: hrDeviceType
+      - source_indexes: [prIndex]
+        lookup: prNames
+      - source_indexes: [prIndex]
+        lookup: prErrMessage
+    overrides:
+      ifAlias:
+        ignore: true # Lookup metric
+      ifDescr:
+        ignore: true # Lookup metric
+      ifName:
+        ignore: true # Lookup metric
+      ifType:
+        type: EnumAsInfo
+      dskDevice:
+        ignore: true
+      dskPath:
+        ignore: true
+      dskErrorMsg:
+        ignore: true
+      laNames:
+        ignore: true
+      laErrMessage:
+        ignore: true
+      laConfig:
+        ignore: true
+      hrDeviceType:
+        ignore: true
+      hrDeviceDescr:
+        ignore: true
+      hrDeviceIndex:
+        ignore: true
+      prNames:
+        ignore: true
+      prErrMessage:
+        ignore: true
+  # SNMP entries for Windows SNMP targets
+  if_win32:
+    walk: [hrDeviceTable, hrProcessorTable, hrStorage, sysUpTime, sysDescr, sysName]
+    lookups:
+      - source_indexes: [hrStorageIndex]
+        lookup: hrStorageDescr
+      - source_indexes: [hrStorageIndex]
+        lookup: hrStorageType
+    overrides:
+      hrStorageDescr:
+        ignore: true
+      hrStorageType:
+        ignore: true

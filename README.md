@@ -32,3 +32,14 @@ them before running.
    ./test-mibs.sh
    ```
    
+4. Install SNMP Exporter (gathers data via SNMP protocol and publish them as HTTP to Prometheus)
+  
+   ```shell
+   ./cc-setup-snmp-exporter.sh
+   ```
+
+5. Verify that Exporter published SNMP data on HTTP backend with:
+
+   ```shell
+   ./test-snmp-exporter.sh
+   ```
