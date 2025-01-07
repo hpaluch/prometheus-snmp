@@ -43,3 +43,13 @@ them before running.
    ```shell
    ./test-snmp-exporter.sh
    ```
+
+6. Optional (but needed for default setup): setup local SMTP delivery Postfix server and send test e-mails using
+   (used to deliver alerts without need for real SMTP relay):
+
+   ```shell
+   ./dd-setup-local-email.sh
+   ```
+
+   Do NOT run above script on production SMTP server (!) - it forces local-delivery of all e-mails!
+
