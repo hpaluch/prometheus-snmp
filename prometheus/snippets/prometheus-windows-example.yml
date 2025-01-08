@@ -1,0 +1,32 @@
+# ...
+scrape_configs:
+  # example below requires external Window machine with SNMP
+  - job_name: snmp-windows
+    static_configs:
+    - targets: ['127.0.0.1:9116']
+      labels:
+        snmp_module: if_win32
+        job: 'snmp'
+        instance: 'win'
+    metric_relabel_configs:
+      - source_labels: [hrStorageType]
+        target_label: hrStorageType
+        regex: '^1\.3\.6\.1\.2\.1\.25\.2\.1\.4$'
+        replacement: "FixedDisk"
+      - source_labels: [hrStorageType]
+        target_label: hrStorageType
+        regex: '^1\.3\.6\.1\.2\.1\.25\.2\.1\.7$'
+        replacement: "CompactDisc"
+      - source_labels: [hrStorageType]
+        target_label: hrStorageType
+        regex: '^1\.3\.6\.1\.2\.1\.25\.2\.1\.3$'
+        replacement: "VirtualMemory"
+      - source_labels: [hrStorageType]
+        target_label: hrStorageType
+        regex: '^1\.3\.6\.1\.2\.1\.25\.2\.1\.2$'
+        replacement: "Ram"
+    metrics_path: /snmp
+    params:
+      module: [if_win32]
+      target: ['192.168.X.Y']
+

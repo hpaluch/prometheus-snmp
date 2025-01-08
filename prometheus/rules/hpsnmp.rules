@@ -1,0 +1,68 @@
+# rules/hpsnmp.rules - Rules for SNMP Exporter
+# validate with:  promtool check rules hpsnmp.rules
+---
+groups:
+  - name: HP SNMP Group
+    rules:
+      - record: hp:snmp:dskFreePercent
+        expr: 100 - dskPercent
+      - alert: HP Disk Full
+        expr: hp:snmp:dskFreePercent < dskMinPercent
+        for: 5m
+        annotations:
+          summary: |
+            Disk {{ $labels.dskPath }} free space only {{ $value | printf "%.2f" }}% on
+            host {{ $labels.instance }}
+          description: |
+            Disk {{ $labels.dskDevice }} at {{ $labels.dskPath }}
+            free space is only {{ $value | printf "%.2f" }}
+            on server {{ $labels.instance }} for over 5 minutes.
+
+      - record: hp:snmp:cpu_count
+        expr: count without(hrDeviceDescr,hrDeviceIndex,hrDeviceType) (hrProcessorLoad)
+      - record: hp:snmp:cpu_usage
+        expr: sum by (instance,job) (hrProcessorLoad) / count without(hrDeviceDescr,hrDeviceIndex,hrDeviceType) (hrProcessorLoad)
+      - alert: HP SNMP Disk Error
+        expr: 'dskErrorFlag > 0.5'
+        for: 5m
+        annotations:
+          summary: |
+            Disk {{ $labels.dskDevice }} at {{ $labels.dskPath }} reports {{ $labels.dskErrorMsg }}
+            on host {{ $labels.instance }}
+          description: |
+            Disk {{ $labels.dskDevice }} at {{ $labels.dskPath }}
+            reports SNMP error {{ $labels.dskErrorMsg }}
+            on server {{ $labels.instance }} for over 5 minutes.
+      - alert: HP SNMP Proc Error
+        expr: 'prErrorFlag > 0.5'
+        for: 5m
+        annotations:
+          summary: |
+            Process {{ $labels.prNames }} reports {{ $labels.prErrorMsg }}
+            on host {{ $labels.instance }}
+          description: |
+            Process {{ $labels.prNames }}
+            reports SNMP error {{ $labels.prErrorMsg }}
+            on server {{ $labels.instance }} for over 5 minutes.
+      - alert: HP SNMP LoadAvg Error
+        expr: 'laErrorFlag > 0.5'
+        for: 5m
+        annotations:
+          summary: |
+            Load Avg {{ $labels.laNames }} reports {{ $labels.laErrMessage }}
+            on host {{ $labels.instance }}
+          description: |
+            Load Average {{ $labels.laNames }}
+            reports SNMP error {{ $labels.laErrMessage }}
+            on server {{ $labels.instance }} for over 5 minutes.
+            Threshold is {{ $labels.laConfig }}.
+      - alert: HP SNMP Win Disk Full
+        expr: '100 * hrStorageUsed{hrStorageType="FixedDisk",snmp_module="if_win32"}/hrStorageSize{hrStorageType="FixedDisk",snmp_module="if_win32"} > 80'
+        for: 2m
+        annotations:
+          summary: |
+            Disk {{ $labels.hrStorageDescr }} usage is {{ $value | printf "%.2f" }}% on host {{ $labels.instance }}
+          description: |
+            Disk {{ $labels.hrStorageDescr }} usage is {{ $value | printf "%.2f" }}% (over 80%) on
+            on server {{ $labels.instance }} for over 2 minutes.
+ 

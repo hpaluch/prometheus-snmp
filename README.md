@@ -1,7 +1,7 @@
 # Monitoring SNMP targets with Prometheus
 
-> [!WARNING]
-> Work in Progress...
+Standalone example how to use Prometheus and Alert Manager to
+monitor machines using SNMP protocol.
 
 Required OS: Debian 12 (I use it).
 
@@ -53,3 +53,19 @@ them before running.
 
    Do NOT run above script on production SMTP server (!) - it forces local-delivery of all e-mails!
 
+7. Install and configure Prometheus and Alert Manager with:
+   ```shell
+   ./ee-setup-prometheus-am.sh
+   ```
+
+   - You can find Prometheus UI on `http://IP:9090`
+   - WARNING! Standalone Alert Manager UI is on `http://IP:9093`, but it requires compilation with script
+     `/usr/share/prometheus/alertmanager/generate-ui.sh` - however that script is broken.
+     You can find more information at https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1067469
+     and pointer to fixed script at https://salsa.debian.org/go-team/packages/prometheus-alertmanager/-/blob/51802d88957fc08bf13daab426e59718fadcf66e/debian/generate-ui.sh
+     Please note that even with fixed script the standalone Alert Manager UI is half-broken.
+     I recommend rather use Prometheus Alert view on `http://IP:9090/classic/alerts`
+
+   NOTE: It is strongly recommended to limit UI access (there is no password or any other form
+   of authentication) - for example by limiting it to listen on `localhost` only and possibly
+   using reverse-proxy server with authentication to protect access.
